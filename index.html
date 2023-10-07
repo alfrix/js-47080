@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://alfrix.github.io/futurnet-web/css/style.css"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"></link>
     <title>Curso JS</title>
 </head>
 <body>
     <header>
-        <h1>Selector de planes de conexión</h1>
-        <h2>Pre-entrega #1</h2>
+        <h1>Generador de planes de conexión</h1>
+        <h2>Pre-entrega #2</h2>
     </header>
     <main>
         <h2>Planes Disponibles</h2>
         <section>
             <ul id="planes"></ul>
         </section>
-        <input type="button" value="Seleccionar Plan" onclick="preguntarPlan();">
+        <input class='boton' type="button" value="Seleccionar Plan" onclick="preguntarPlan();">
+        <input class='boton' type="button" value="Con Wifi" onclick="filtrarPlanes();">
+        <input class='boton' type="button" value="Ordenar" onclick="ordenarPlanes();">
     </main>    
 </body>
 <script src="./coder.js"></script>
