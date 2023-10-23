@@ -1,0 +1,42 @@
+[
+{
+    "nombre":"<span class=\"nmegas\">100</span> Megas*",
+    "bajada":100,
+    "subida":25,
+    "wifi":false,
+    "wifipro":true,
+    "fibraoptica":true,
+    "cablemodem":false,
+    "instalacionGratis":true
+},
+{
+    "nombre":"<span class=\"nmegas\">20</span> Megas*",
+    "bajada":20,
+    "subida":4,
+    "wifi":true,
+    "wifipro":false,
+    "fibraoptica":true,
+    "cablemodem":false,
+    "instalacionGratis":true
+},
+{
+    "nombre":"<span class=\"nmegas\">50</span> Megas*",
+    "bajada":50,
+    "subida":10,
+    "wifi":false,
+    "wifipro":true,
+    "fibraoptica":true,
+    "cablemodem":false,
+    "instalacionGratis":true
+},
+{
+    "nombre":"<span class=\"nmegas\">12</span> Megas*",
+    "bajada":12,
+    "subida":2,
+    "wifi":false,
+    "wifipro":false,
+    "fibraoptica":false,
+    "cablemodem":true,
+    "instalacionGratis":false
+}
+]
