@@ -1,46 +1,27 @@
-// TODO:
-// * metodo para ingresar y remover planes (para el admin)
-// * los planes deberian ser guardados en un JSON (esto es algo sencillo no necesita db)
-// - escribir planes deberia crear tarjetas de producto
-// * no deberia ser necesario preguntar plan el usuario hará click en la tarjeta que le interese
-// * al seleccionar plan deberia ser escrito en un form para enviar al mail en la pagina de contacto
+fetch("./planes.json")
+  .then((response) => response.json())
+  .then((planes) => {
+    main(planes);
+  })
+  .catch((error) => console.error("Error fetching JSON:", error));
 
 class Plan {
   constructor(
     bajada,
     subida,
     wifi,
-    wifipro,
     fibraoptica,
     cablemodem,
     instalacionGratis
   ) {
-    this.nombre = `<span class="nmegas">${bajada}</span> Megas*`;
     this.bajada = bajada;
     this.subida = subida;
     this.wifi = wifi;
-    this.wifipro = wifipro;
     this.fibraoptica = fibraoptica;
     this.cablemodem = cablemodem;
     this.instalacionGratis = instalacionGratis;
   }
 }
-
-
-fetch("./planes.json")
-  .then((response) => response.json())
-  .then((data) => {
-    // console.log(data);
-    main(data)
-  })
-  .catch((error) => console.error("Error fetching JSON:", error));
-
-// let Planes = [
-//   new Plan(100, 25, false, true, true, false, true),
-//   new Plan(20, 4, true, false, true, false, true),
-//   new Plan(50, 10, false, true, true, false, true),
-//   new Plan(12, 2, false, false, false, true, false),
-// ];
 
 function crearTarjetas(planes) {
   // insertar tarjetas de producto
@@ -63,13 +44,13 @@ function crearTarjetas(planes) {
     let ul = document.createElement("ul");
 
     let titulo = document.createElement("li");
-    titulo.innerHTML = `${plan.nombre}`;
+    titulo.innerHTML = `${`<span class="nmegas">${plan.bajada}</span> Megas*`}`;
     ul.append(titulo);
 
     let wifi = document.createElement("li");
-    if (plan.wifi) {
+    if (plan.wifi == 1) {
       wifi.innerHTML = '<i class="bi bi-wifi"></i>WiFi';
-    } else if (plan.wifipro) {
+    } else if (plan.wifi == 2) {
       wifi.innerHTML = '<i class="bi bi-wifi"></i>WiFi Pro Bi-banda';
     }
     ul.append(wifi);
@@ -109,51 +90,19 @@ function crearTarjetas(planes) {
   }
 }
 
-function preguntarPlan() {
-  let respuesta = "Número no valido";
-  let vel = NaN;
-  let count = 1;
-  const maxRetries = 2;
-  do {
-    vel = Number(prompt("¿Que velocidad de conexión desea? (Número)"));
-    if (isNaN(vel) || vel <= 0) {
-      alert(respuesta);
-      console.log(`Intento #${count}`);
-      count += 1;
-    } else {
-      respuesta = `Ud. quiere ${vel} megas`;
-    }
-  } while (respuesta == "Número no valido" && count <= maxRetries);
-
-  if (count > maxRetries || isNaN(vel)) {
-    console.log("No valido saliendo");
-    return;
-  }
-
-  let encontrado = false;
-  for (let plan in Planes) {
-    if (vel == Planes[plan].bajada) {
-      encontrado = true;
-      break;
-    }
-  }
-  if (encontrado) {
-    alert(respuesta + " y está el plan está disponible, Contactenos");
-  } else {
-    // buscar mas cercano?
-    alert(respuesta + " pero no se ha encontrado plan que concuerde");
-  }
-}
-
-let dir = "asc";
 function ordenarPlanes(planes) {
-  // boton que ordene (se invierte solo)
-  if (dir == "asc") {
+  // boton que ordena (se invierte solo)
+  let iconOrdenar = document.getElementById("iconOrdenar");
+  if (iconOrdenar.classList.contains("bi-sort-down")) {
     planes.sort((a, b) => a.bajada - b.bajada);
-    dir = "desc";
-  } else if (dir == "desc") {
+    iconOrdenar.classList.remove("bi-sort-down");
+    iconOrdenar.classList.add("bi-sort-up");
+    console.log("ascendente");
+  } else {
     planes.sort((a, b) => a.bajada + b.bajada);
-    dir = "asc";
+    iconOrdenar.classList.remove("bi-sort-up");
+    iconOrdenar.classList.add("bi-sort-down");
+    console.log("descendente");
   }
   reEscribirPlanes(planes);
 }
@@ -176,17 +125,34 @@ function reEscribirPlanes(planes) {
 }
 
 // Main
-function main(planes){
-  let planesMostrados = planes
-  let btnWifi = document.querySelector("#wifi");
+function main(planes) {
+  let planesMostrados = planes;
+  let btnWifi = document.querySelector("#wifiBtn");
+  let checkWifi = document.querySelector("#wifiCheck");
+  checkWifi.checked = JSON.parse(sessionStorage.getItem("checkWifi"));
   btnWifi.onclick = function () {
-    reEscribirPlanes(filtrarPlanes(btnWifi.checked, planes));
-    planesMostrados = filtrarPlanes(btnWifi.checked, planes);
+    checkWifi.checked = !checkWifi.checked;
+    reEscribirPlanes(filtrarPlanes(checkWifi.checked, planes));
+    planesMostrados = filtrarPlanes(checkWifi.checked, planes);
+    sessionStorage.setItem("checkWifi", checkWifi.checked);
   };
-  planesMostrados = filtrarPlanes(btnWifi.checked, planes);
+  checkWifi.onclick = btnWifi.onclick;
+  planesMostrados = filtrarPlanes(checkWifi.checked, planes);
 
   let btnOrdenar = document.getElementById("ordenar");
   btnOrdenar.addEventListener("click", () => ordenarPlanes(planesMostrados));
+  btnOrdenar.click();
 
-  crearTarjetas(planesMostrados);
+  Toastify({
+    text: "Bienvenido ",
+    duration: 5000,
+    newWindow: true,
+    close: true,
+    gravity: "top", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    style: {
+      background: "#0044aa",
+    },
+  }).showToast();
 }
