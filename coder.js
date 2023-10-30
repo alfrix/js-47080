@@ -1,10 +1,3 @@
-fetch("https://alfrix.github.io/js-47080/planes.json")
-  .then((response) => response.json())
-  .then((planes) => {
-    main(planes);
-  })
-  .catch((error) => console.error("Error fetching JSON:", error));
-
 class Plan {
   constructor(
     bajada,
@@ -22,6 +15,13 @@ class Plan {
     this.instalacionGratis = instalacionGratis;
   }
 }
+
+fetch("https://alfrix.github.io/js-47080/planes.json")
+  .then((response) => response.json())
+  .then((planes) => {
+    main(planes);
+  })
+  .catch((error) => console.error("Error fetching JSON:", error));
 
 function crearTarjetas(planes) {
   // insertar tarjetas de producto
@@ -93,24 +93,25 @@ function crearTarjetas(planes) {
 function ordenarPlanes(planes) {
   // boton que ordena (se invierte solo)
   let iconOrdenar = document.getElementById("iconOrdenar");
+  let ordenados = [];
   if (iconOrdenar.classList.contains("bi-sort-down")) {
-    planes.sort((a, b) => a.bajada - b.bajada);
+    ordenados = planes.toSorted((a, b) => a.bajada - b.bajada);
     iconOrdenar.classList.remove("bi-sort-down");
     iconOrdenar.classList.add("bi-sort-up");
     console.log("ascendente");
   } else {
-    planes.sort((a, b) => a.bajada + b.bajada);
+    ordenados = planes.toSorted((a, b) => a.bajada + b.bajada);
     iconOrdenar.classList.remove("bi-sort-up");
     iconOrdenar.classList.add("bi-sort-down");
     console.log("descendente");
   }
-  reEscribirPlanes(planes);
+  reEscribirPlanes(ordenados);
 }
 
 function filtrarPlanes(wifi, planes) {
   // filtrar planes con wifi (checkbox de solo wifi)
   if (wifi) {
-    let filtrado = planes.filter((a) => a.wifi || a.wifipro);
+    let filtrado = planes.filter((a) => a.wifi);
     return filtrado;
   }
   return planes;
