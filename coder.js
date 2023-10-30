@@ -1,4 +1,4 @@
-fetch("./planes.json")
+fetch("https://alfrix.github.io/js-47080/planes.json")
   .then((response) => response.json())
   .then((planes) => {
     main(planes);
